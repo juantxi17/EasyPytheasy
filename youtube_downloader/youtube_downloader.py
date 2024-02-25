@@ -86,7 +86,31 @@ def muestra_datos(data):
 	print("URL del autor: ", data[2])
 	print("Fecha de publicación: ", data[3])
 	print("Duración: ", data[4])
+
+def filtrar_datos(youtube):	
+	opcion=input("Seleccione 'Audio' o 'Vídeo': ").upper()
+	if opcion=='AUDIO':
+		filtrados=youtube.streams.filter(only_audio=True)
+		return filtrados
+	elif opcion=='VIDEO':
+		filtrados=youtube.streams.filter().order_by('resolution').desc()
+		return filtrados
+	elif opcion!='VIDEO' and opcion!='AUDIO':
+		print("ERROR: La opción seleccionada no está disponible")
+		opcion=None
+	while not bool(opcion):
+		opcion=input("Seleccione 'Audio' o 'Vídeo': ").upper()
+		if opcion=='AUDIO':
+			filtrados=youtube.streams.filter(only_audio=True)
+			return filtrados
+		elif opcion=='VIDEO':
+			filtrados=youtube.streams.filter().order_by('resolution').desc()
+			return filtrados
+		elif opcion!='VIDEO' and opcion!='AUDIO':
+			print("ERROR: La opción seleccionada no está disponible")
+			opcion=None
 	
+		
 
 def muestra_streams(streams):  #Imprime en pantalla todos los streams disponibles
 	print("Características del vídeo: ")
@@ -182,7 +206,7 @@ while not (bool(ans) and val and acc and bool(yt)):
 	ans=confirmar_url(url)
 
 #Procesado de los streams
-streams_filtrados=yt.streams.filter().order_by('resolution').desc() #Realizamos un filtrado de los posibles streams que contienen el audio y el vídeo (Progessive=True)
+streams_filtrados=filtrar_datos(yt)
 muestra_streams(streams_filtrados)
 selec=seleccionar_stream(streams_filtrados)
 ind=devuelve_indice(selec,streams_filtrados)
